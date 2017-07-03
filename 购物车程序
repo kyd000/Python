@@ -1,0 +1,91 @@
+#! /usr/bin/env python
+# -*- conding:encoding -*-
+
+exit_flag = False
+file_user = open('购物车用户信息','r+',encoding='utf-8')
+f_user = file_user.read()
+f_dict = eval(f_user)
+
+
+username = input('请输入用户名:')
+password = input('请输入密码:')
+
+def register(username):
+    salary = input('请输入您的工资:')
+    register = {}
+    register[password] = salary
+    f_dict[username]=register
+    file_user.seek(0)
+    file_user.write(f_dict)
+    print(file_user.tell())
+
+while not exit_flag:
+    if username in f_dict:
+        if password in f_dict[username]:
+            salary = f_dict[username][password]
+            print('''\033[32;1m欢迎%s登录,您的当前余额为%s\033[0m'''%(username,salary))
+            break
+        else:
+            password = input('密码输入有误,请重新输入:')
+            continue
+    else:
+        register(username)
+
+file_shopping = open('商品列表','r',encoding='utf-8')
+f_shopping = file_shopping.read()
+f_shopping_list = eval(f_shopping)
+
+file_old_shopping = open('历史购物信息','r+',encoding='utf-8')
+f_old_shopping = file_old_shopping.read()
+f_old_shopping_dict = eval(f_old_shopping)
+if username not in f_old_shopping:
+    f_old_shopping_dict[username] = []
+shopping_old_list = f_old_shopping_dict[username]
+shopping_list = []
+
+while not exit_flag:
+    print('---------商品列表---------')
+    for index,item in enumerate(f_shopping_list):
+        print(index,item)
+    print('---------结束---------')
+    Your_choice = input('请输入需要购买的商品序列号:')
+    if Your_choice.isdigit():
+        Your_choice = int(Your_choice)
+        if Your_choice >=0 and Your_choice< len(f_shopping_list):
+            p_item = f_shopping_list[Your_choice]
+            if p_item[1] <= salary:
+                salary -=p_item[1]
+                print('''\033[32;1m添加商品%s您的到购物车,您的余额还有%s\033[0m''' %(p_item[0],salary))
+                # shopping_list.append(p_item)
+                # file_old_shopping.seek(0)
+                # file_old_shopping.write(str(shopping_list))
+                # f_dict[username][password] = salary
+                # file_user.seek(0)
+                # file_user.write(str(f_dict))
+            else:
+                print('''\033[32;1m您的余额还有%s,请重新输入\033[0m''' %salary)
+        else:
+            print('''033[32;1m输入的商品编号不存在,请重新输入...\033[0m''')
+    if Your_choice == 'q':
+        exit_flag = True
+    print('------购物清单----------')
+    for i in shopping_old_list:
+        print(i)
+        print('''\033[32;1m您的余额还有%s\033[0m''' %salary)
+        shopping_old_list.append(shopping_list)
+        f_old_shopping_dict[username] = shopping_old_list
+        file_old_shopping.seek(0)
+        file_old_shopping.write(str(f_old_shopping_dict))
+        f_dict[username][password] = salary
+        file_user.seek(0)
+        file_user.write(str(f_dict))
+
+
+
+
+
+
+
+
+
+
