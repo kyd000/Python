@@ -49,7 +49,11 @@ if username not in f_old_shopping:
 shopping_old_list = f_old_shopping_dict[username]   #读出已购物用户的购物列表
 shopping_list = []                                  #定义一个空列表对应本次购物清单
 
-print(salary)
+choose = input('\n是否需要查询历史购物记录(y/n):')
+if choose == 'y':
+    print("\n\n----------历史购物记录---------------")
+    print(shopping_old_list)
+    print("------------------结束--------------------\\n\n")
 
 while not exit_flag:
     print('---------商品列表---------')
