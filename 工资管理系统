@@ -1,0 +1,95 @@
+# #! /usr/bin/env python
+# # -*- conding:encoding -*-
+
+import os
+
+
+def add():
+    staff = input('输入要添加的员工姓名和工资用空格分开').strip()
+    staff_list =staff.split()
+    flag = False
+    with open('info.txt','r') as readings:
+        for line in readings:
+            if line.split()[0] == staff_list[0]:
+                flag = True
+            else:
+                continue
+        if not flag:
+            with open('info.txt','a') as writings:
+                writings.write('\n'+staff)
+            print('添加成功!')
+        else:
+            print('\033[1;31m员工已存在!!\033[0m')
+
+
+def delete():
+    name = input('输入要删除的员工姓名').strip()
+    flag =False
+    with open('info.txt', 'r') as readings, open('info', 'w') as writings:
+        for line in readings:
+            if line.split()[0] == name:
+                flag = True
+                continue
+            else:
+                writings.write(line)
+    os.rename('info.txt','info_bak.txt')
+    os.rename('info','info.txt')
+    if flag:
+        print('信息删除成功!!')
+    else:
+        print('\033[1;31m未找到对应的员工%s信息\033[0m' %name)
+
+def update():
+    staff = input('输入要修改的员工姓名和信息,用空格分开').strip()
+    staff_list = staff.split()
+    flag = False
+    with open('info.txt','r') as readings, open('info','w') as writings:
+        for line in readings:
+            if line.split()[0] == staff_list[0]:
+                writings.write(staff+'\n')
+                flag = True
+            else:
+                writings.write(line)
+    os.rename('info.txt','info_bak.txt')
+    os.rename('info','info.txt')
+    if flag:
+        print('信息修改完成!!')
+    else:
+        print('\033[1;31m未找到对应的员工%s信息\033[0m'%staff_list[0])
+
+
+def serach():
+    name = input('输入要查询的员工姓名:>>>').strip()
+    flag = False
+    with open('info.txt','r') as readings:
+        for line in readings:
+            if name in line.split():
+                flag = True
+                print('%s的工资是%s' %(name,line.split()[1]))
+            else:
+                continue
+    if not flag:
+        print('''\033[32;1m %s员工信息不存在\033[0m''' %name)
+
+def main():
+    action_dict = {
+    "1":['查询账户',serach],
+    "2":['添加账户',add],
+    "3":['修改账户',update],
+    "4":['删除账户',delete]
+            }
+    print('''
+    工资管理系统:
+        1:查询账户
+        2:新增账户
+        3:修改账户
+        4:删除账户
+    ''')
+    while True:
+        choice = input('>>>').strip()
+        if choice in action_dict:
+            action_dict[choice][1]()
+
+if __name__ == '__main__':
+    main()
+
