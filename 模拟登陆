@@ -1,0 +1,44 @@
+#! /usr/bin/env python
+# -*- conding:encoding -*-
+
+flag =False
+count = 0
+file_open = open('用户信息','r',encoding='utf-8')
+file_wrong_open = open('被锁定用户信息','r+',encoding='utf-8')
+
+file = file_open.read()
+file_wrong = file_wrong_open.read()
+
+file_dict = eval(file)
+file_wrong_dict = eval(file_wrong)
+
+username = input('请输入用户名:')
+password = input('请输入密码:')
+
+while not flag:
+    if username in file_dict and username not in file_wrong_dict:
+        if count < 3:           #实际上输入了4次密码
+            if password == file_dict[username]:
+                print('%s登录成功' %username)
+                flag = True
+                break
+            else:
+                print('第%d次密码输入错误,请重新输入:' %count)
+                password = input('请重新输入密码:')
+                count +=1
+        else:
+            print('第%d次密码输入错误,%s已被锁定,请联系管理员'  %(count,username))
+            file_wrong_dict.append(username)
+            file_wrong_open.seek(0)
+            file_wrong_open.write(str(file_wrong_dict))
+            flag = True
+            break
+    elif username  in file_dict and username  in file_wrong_dict:
+        print("%s已被锁定,请联系管理员>>>" %username)
+        flag = True
+        break
+    else:
+        print("%s用户名不存在!!!" %username)
+        flag = True
+        break
+
