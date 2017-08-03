@@ -1,0 +1,59 @@
+#! /usr/bin/env python
+# -*- conding:encoding -*-
+
+flag = False
+file_open = open('三级菜单','r',encoding='utf-8')
+file = file_open.read()
+file_dict = eval(file)
+print(file_dict)
+
+while not flag:
+    for i1 in file_dict:
+        print("一级菜单",i1)
+    choice1 = input("选择进入1级菜单:")
+    if choice1 in file_dict:
+        while not flag:
+            for i2 in file_dict[choice1]:
+                print("\t二级菜单",i2)
+            choice2 = input("选择进入二级菜单:")
+            if choice2 in file_dict[choice1]:
+                while not flag:
+                    for i3 in file_dict[choice1][choice2]:
+                        print("\t\t三级菜单",i3)
+                    choice3 = input("选择进入三级菜单:")
+                    if choice3  in file_dict[choice1][choice2]:
+                        while not flag:
+                            for i4 in file_dict[choice1][choice2][choice3]:
+                                print("\t\t\t最后一级菜单",i4)
+                            choice4 = input("最后一级菜单,按'b'返回,按'q'退出...")
+                            if choice4 == 'b':
+                                break
+                            elif choice4 == 'q':
+                                flag = True
+                                break
+                            else:
+                                print("输入有误,请重新输入:")
+                                continue
+                    elif choice3 == 'b':
+                        break
+                    elif choice3 == 'q':
+                        flag = True
+                    else:
+                        print("输入有误,请重新输入:")
+                        continue
+
+            elif choice2 == 'b':
+                break
+            elif choice2 == 'q':
+                flag = True
+            else:
+                print("输入有误,请重新输入:")
+                continue
+
+    elif choice1 == 'b':
+        break
+    elif choice1 == 'q':
+        flag = True
+    else:
+        print("输入有误,请重新输入:")
+        continue
